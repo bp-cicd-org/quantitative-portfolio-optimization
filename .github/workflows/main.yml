@@ -108,7 +108,9 @@ jobs:
 
                 echo "===================== Run ${input} notebook ====================="
                 set +e
-                papermill "$input" "$output" --kernel portfolio-opt --log-output --log-level DEBUG 2>&1 | tee "${name}.papermill.log"
+                papermill "$input" "$output" --kernel portfolio-opt --log-output --log-level DEBUG 2>&1 \
+                  | sed -E "s/\x27image\/png\x27: \x27[^\x27]*\x27/\x27image\/png\x27: \x27<elided>\x27/g" \
+                  | tee "${name}.papermill.log"
                 local status="${PIPESTATUS[0]}"
                 set -e
 
